@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار بسيط</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #4CAF50;
+    }
+    .time {
+      font-size: 24px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .display {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>صفحة اختبار بسيطة</h1>
+    <p>هذه صفحة بسيطة للتأكد من أن الخادم يعمل بشكل صحيح.</p>
+    <div class="time" id="current-time"></div>
+    <button onclick="updateTime()">تحديث الوقت</button>
+    <div class="display" id="display"></div>
+  </div>
+
+  <script>
+    // تحديث الوقت الحالي
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('current-time').textContent = now.toLocaleTimeString();
+      document.getElementById('display').textContent = `تم تحديث الوقت بنجاح في ${now.toLocaleString()}`;
+    }
+
+    // تحديث الوقت عند تحميل الصفحة
+    updateTime();
+  </script>
+</body>
+</html>

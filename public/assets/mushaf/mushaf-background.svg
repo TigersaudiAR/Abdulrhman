@@ -1,0 +1,38 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background pattern for Quran page -->
+  <defs>
+    <pattern id="mushafPattern" patternUnits="userSpaceOnUse" width="40" height="40" patternTransform="rotate(45)">
+      <rect width="40" height="40" fill="#FEFAEE" />
+      <path d="M0,20 L40,20" stroke="#DAD1B5" stroke-width="0.3" opacity="0.2" />
+      <path d="M20,0 L20,40" stroke="#DAD1B5" stroke-width="0.3" opacity="0.2" />
+    </pattern>
+    <linearGradient id="pageGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF8" stop-opacity="1" />
+      <stop offset="100%" stop-color="#F8F3E6" stop-opacity="1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main background with pattern -->
+  <rect width="800" height="600" fill="url(#pageGradient)" />
+  <rect width="800" height="600" fill="url(#mushafPattern)" />
+  
+  <!-- Subtle decorative elements that mimic traditional Quran page design -->
+  <g opacity="0.05">
+    <circle cx="400" cy="300" r="200" fill="none" stroke="#785B28" stroke-width="1.5" />
+    <circle cx="400" cy="300" r="190" fill="none" stroke="#785B28" stroke-width="0.7" />
+    <path d="M200,300 L600,300" stroke="#785B28" stroke-width="0.7" />
+    <path d="M400,100 L400,500" stroke="#785B28" stroke-width="0.7" />
+  </g>
+  
+  <!-- Corners with subtle Islamic decorative patterns -->
+  <g opacity="0.1">
+    <!-- Top Left corner -->
+    <path d="M50,50 C70,30 100,30 120,50 C140,70 140,100 120,120 C100,140 70,140 50,120 C30,100 30,70 50,50 Z" fill="none" stroke="#785B28" stroke-width="1" />
+    <!-- Top Right corner -->
+    <path d="M750,50 C730,30 700,30 680,50 C660,70 660,100 680,120 C700,140 730,140 750,120 C770,100 770,70 750,50 Z" fill="none" stroke="#785B28" stroke-width="1" />
+    <!-- Bottom Left corner -->
+    <path d="M50,550 C70,570 100,570 120,550 C140,530 140,500 120,480 C100,460 70,460 50,480 C30,500 30,530 50,550 Z" fill="none" stroke="#785B28" stroke-width="1" />
+    <!-- Bottom Right corner -->
+    <path d="M750,550 C730,570 700,570 680,550 C660,530 660,500 680,480 C700,460 730,460 750,480 C770,500 770,530 750,550 Z" fill="none" stroke="#785B28" stroke-width="1" />
+  </g>
+</svg>

@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>مصحف القرآن الكريم</title>
+  <style>
+    body { font-family: 'Arial'; background: #f8f8f8; padding: 20px; text-align: center; direction: rtl; }
+    input, select, button { padding: 10px; margin: 5px; font-size: 16px; }
+    .result { background: #fff; padding: 20px; margin-top: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    img { max-width: 100%; margin-top: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>مصحف القرآن الكريم التفاعلي</h1>
+
+  <div>
+    <label>السورة:</label>
+    <input type="number" id="sura" value="1" min="1" max="114">
+    <label>الآية:</label>
+    <input type="number" id="ayah" value="1" min="1">
+    <label>الصورة:</label>
+    <select id="imgType">
+      <option value="uthmani">عثماني</option>
+      <option value="tajweed">تجويد</option>
+      <option value="warsh">ورش</option>
+    </select>
+    <label>القارئ:</label>
+    <select id="reader">
+      <option value="Minshawi">المنشاوي</option>
+      <option value="Husary">الحصري</option>
+      <option value="Basit">عبدالباسط</option>
+      <option value="Shatri">الشاطري</option>
+    </select>
+    <button onclick="fetchData()">عرض</button>
+  </div>
+
+  <div class="result" id="output">
+    <h2>النتائج ستظهر هنا...</h2>
+  </div>
+
+  <script>
+    function getReaderURL(reader) {
+      const base = "https://verses.quran.com/AbdulBaset/Mujawwad/mp3";
+      const map = {
+        "Minshawi": "https://verses.quran.com/Minshari/Mujawwad/mp3",
+        "Husary": "https://verses.quran.com/Husary/Mujawwad/mp3",
+        "Basit": "https://verses.quran.com/AbdulBaset/Mujawwad/mp3",
+        "Shatri": "https://verses.quran.com/Shatri/Mujawwad/mp3"
+      };
+      return map[reader] || base;
+    }
+
+    function formatNum(n) {
+      return n.toString().padStart(3, '0');
+    }
+
+    async function fetchData() {
+      const sura = document.getElementById("sura").value;
+      const ayah = document.getElementById("ayah").value;
+      const imgType = document.getElementById("imgType").value;
+      const reader = document.getElementById("reader").value;
+      const output = document.getElementById("output");
+
+      try {
+        const [tafsir, translation] = await Promise.all([
+          fetch(`/tafsir/${sura}/${ayah}`).then(res => res.json()),
+          fetch(`/translation/${sura}/${ayah}`).then(res => res.json())
+        ]);
+
+        const imagePath = `/image/${imgType}/${formatNum(sura)}${formatNum(ayah)}.png`;
+        const audioURL = getReaderURL(reader) + `/${formatNum(sura)}${formatNum(ayah)}.mp3`;
+
+        output.innerHTML = `
+          <h2>التفسير:</h2>
+          <p>${tafsir.text}</p>
+          <h2>الترجمة:</h2>
+          <p>${translation.text}</p>
+          <h2>صورة الآية:</h2>
+          <img src="${imagePath}" alt="صورة الآية">
+          <h2>الاستماع للآية:</h2>
+          <audio controls src="${audioURL}"></audio>
+        `;
+      } catch (err) {
+        output.innerHTML = "<p style='color:red'>حدث خطأ أثناء تحميل البيانات</p>";
+      }
+    }
+  </script>
+</body>
+</html>

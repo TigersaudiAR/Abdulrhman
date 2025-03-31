@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>مصحف القرآن - نسخة الموبايل</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: 'Arial'; margin: 0; padding: 10px; background: #f4f4f4; }
+    h1 { font-size: 20px; text-align: center; }
+    .container { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    label, select, input, button { width: 100%; margin: 10px 0; font-size: 16px; padding: 10px; border-radius: 5px; }
+    button { background: #28a745; color: white; border: none; }
+    .result { margin-top: 20px; font-size: 15px; line-height: 1.7; }
+    img { max-width: 100%; margin-top: 10px; border: 1px solid #ccc; }
+    audio { width: 100%; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>مصحف القرآن الكريم</h1>
+  <div class="container">
+    <label>رقم السورة</label>
+    <input type="number" id="sura" value="1" min="1" max="114">
+    <label>رقم الآية</label>
+    <input type="number" id="ayah" value="1" min="1">
+    <label>نوع الصورة</label>
+    <select id="imgType">
+      <option value="uthmani">عثماني</option>
+      <option value="tajweed">تجويد</option>
+      <option value="warsh">ورش</option>
+    </select>
+    <label>القارئ</label>
+    <select id="reader">
+      <option value="Minshawi">المنشاوي</option>
+      <option value="Husary">الحصري</option>
+      <option value="Basit">عبدالباسط</option>
+      <option value="Shatri">الشاطري</option>
+    </select>
+    <button onclick="fetchData()">عرض</button>
+
+    <div class="result" id="output">النتائج ستظهر هنا...</div>
+  </div>
+
+  <script>
+    function getReaderURL(reader) {
+      const map = {
+        "Minshawi": "https://verses.quran.com/Minshari/Mujawwad/mp3",
+        "Husary": "https://verses.quran.com/Husary/Mujawwad/mp3",
+        "Basit": "https://verses.quran.com/AbdulBaset/Mujawwad/mp3",
+        "Shatri": "https://verses.quran.com/Shatri/Mujawwad/mp3"
+      };
+      return map[reader];
+    }
+
+    function formatNum(n) {
+      return n.toString().padStart(3, '0');
+    }
+
+    async function fetchData() {
+      const sura = document.getElementById("sura").value;
+      const ayah = document.getElementById("ayah").value;
+      const imgType = document.getElementById("imgType").value;
+      const reader = document.getElementById("reader").value;
+      const output = document.getElementById("output");
+
+      try {
+        const [tafsir, translation] = await Promise.all([
+          fetch(`/tafsir/${sura}/${ayah}`).then(res => res.json()),
+          fetch(`/translation/${sura}/${ayah}`).then(res => res.json())
+        ]);
+
+        const imgSrc = `/image/${imgType}/${formatNum(sura)}${formatNum(ayah)}.png`;
+        const audioSrc = `${getReaderURL(reader)}/${formatNum(sura)}${formatNum(ayah)}.mp3`;
+
+        output.innerHTML = `
+          <strong>التفسير:</strong><br>${tafsir.text}<br><br>
+          <strong>الترجمة:</strong><br>${translation.text}<br><br>
+          <img src="${imgSrc}" alt="صورة الآية">
+          <audio controls src="${audioSrc}"></audio>
+        `;
+      } catch (err) {
+        output.innerHTML = "حدث خطأ أثناء جلب البيانات.";
+      }
+    }
+  </script>
+</body>
+</html>

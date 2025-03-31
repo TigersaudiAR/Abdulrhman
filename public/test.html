@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>اختبار الخادم</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .image-test {
+            margin: 20px 0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>صفحة اختبار الخادم</h1>
+        <p>إذا كنت ترى هذه الصفحة، فإن الخادم يعمل بشكل صحيح!</p>
+        
+        <div class="image-test">
+            <h2>اختبار عرض صورة من المصحف</h2>
+            <img src="/images/quran_pages/page_1.png" alt="صفحة القرآن الأولى">
+        </div>
+        
+        <div class="api-test">
+            <h2>اختبار واجهة برمجة التطبيقات</h2>
+            <button id="testApi">اختبار API</button>
+            <div id="apiResult" style="margin-top: 10px; padding: 10px; background-color: #f8f9fa;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('testApi').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                document.getElementById('apiResult').textContent = 'نجاح: ' + JSON.stringify(data);
+            } catch (error) {
+                document.getElementById('apiResult').textContent = 'خطأ: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

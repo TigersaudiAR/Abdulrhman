@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تحقق من حالة الخادم - تطبيق القرآن الكريم</title>
+  <style>
+    body {
+      font-family: 'Arial', 'Tahoma', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      direction: rtl;
+    }
+    .container {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 30px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #1f6e43;
+      margin-bottom: 20px;
+    }
+    .status {
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+    .success {
+      background-color: #c2ebd3;
+      color: #1f6e43;
+      border: 1px solid #1f6e43;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #721c24;
+    }
+    .loading {
+      background-color: #e9ecef;
+      color: #495057;
+      border: 1px solid #ced4da;
+    }
+    .btn {
+      background-color: #d4b668;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #b39245;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: left;
+      overflow-x: auto;
+      direction: ltr;
+    }
+  </style>
+</head>
+<body>
+  <h1>فحص حالة خادم تطبيق القرآن الكريم</h1>
+  
+  <div class="container">
+    <h2>حالة الـ API</h2>
+    <div id="api-status" class="status loading">جاري التحقق...</div>
+    <pre id="api-response"></pre>
+    
+    <h2>حالة الاتصال</h2>
+    <div id="connection-status" class="status loading">جاري التحقق...</div>
+    
+    <h2>الطلبات الاختبارية</h2>
+    <button id="test-api" class="btn">اختبار الـ API</button>
+    <button id="test-static" class="btn">اختبار الملفات الثابتة</button>
+    <button id="test-fonts" class="btn">اختبار الخطوط</button>
+    
+    <h2>نتائج الاختبارات</h2>
+    <pre id="test-results"></pre>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // تحديث حالة الاتصال
+      updateConnectionStatus();
+      window.addEventListener('online', updateConnectionStatus);
+      window.addEventListener('offline', updateConnectionStatus);
+      
+      // اختبار الـ API تلقائيًا عند تحميل الصفحة
+      checkApiHealth();
+      
+      // إضافة مستمعي الأحداث للأزرار
+      document.getElementById('test-api').addEventListener('click', checkApiHealth);
+      document.getElementById('test-static').addEventListener('click', testStaticFiles);
+      document.getElementById('test-fonts').addEventListener('click', testFonts);
+    });
+    
+    function updateConnectionStatus() {
+      const connectionStatus = document.getElementById('connection-status');
+      if (navigator.onLine) {
+        connectionStatus.className = 'status success';
+        connectionStatus.textContent = '✓ متصل بالإنترنت';
+      } else {
+        connectionStatus.className = 'status error';
+        connectionStatus.textContent = '✗ غير متصل بالإنترنت';
+      }
+    }
+    
+    async function checkApiHealth() {
+      const apiStatus = document.getElementById('api-status');
+      const apiResponse = document.getElementById('api-response');
+      
+      apiStatus.className = 'status loading';
+      apiStatus.textContent = 'جاري الاتصال بالخادم...';
+      
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+        
+        apiStatus.className = 'status success';
+        apiStatus.textContent = '✓ الخادم يعمل بشكل صحيح';
+        apiResponse.textContent = JSON.stringify(data, null, 2);
+        
+        logResult('اختبار API', 'نجاح', `استجابة: ${JSON.stringify(data)}`);
+      } catch (error) {
+        apiStatus.className = 'status error';
+        apiStatus.textContent = '✗ فشل الاتصال بالخادم';
+        apiResponse.textContent = error.message || 'خطأ غير معروف';
+        
+        logResult('اختبار API', 'فشل', `خطأ: ${error.message || 'خطأ غير معروف'}`);
+      }
+    }
+    
+    async function testStaticFiles() {
+      try {
+        const response = await fetch('/deployment-test.html');
+        if (response.ok) {
+          logResult('اختبار الملفات الثابتة', 'نجاح', `تم تحميل الملف بنجاح (${response.status})`);
+        } else {
+          logResult('اختبار الملفات الثابتة', 'فشل', `فشل التحميل (${response.status})`);
+        }
+      } catch (error) {
+        logResult('اختبار الملفات الثابتة', 'فشل', `خطأ: ${error.message || 'خطأ غير معروف'}`);
+      }
+    }
+    
+    async function testFonts() {
+      try {
+        const response = await fetch('/fonts/UthmanicHafs.woff2');
+        if (response.ok) {
+          logResult('اختبار الخطوط', 'نجاح', `تم تحميل خط UthmanicHafs بنجاح (${response.status})`);
+        } else {
+          logResult('اختبار الخطوط', 'فشل', `فشل تحميل الخط (${response.status})`);
+        }
+      } catch (error) {
+        logResult('اختبار الخطوط', 'فشل', `خطأ: ${error.message || 'خطأ غير معروف'}`);
+      }
+    }
+    
+    function logResult(test, status, message) {
+      const resultsEl = document.getElementById('test-results');
+      const timestamp = new Date().toLocaleTimeString();
+      resultsEl.textContent = `[${timestamp}] ${test}: ${status}\n${message}\n\n` + resultsEl.textContent;
+    }
+  </script>
+</body>
+</html>

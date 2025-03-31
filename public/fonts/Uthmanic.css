@@ -1,0 +1,13 @@
+/* 
+ * Uthmanic Hafs خط مصحف حفص
+ * تعريفات الخطوط المستخدمة في مصحف المدينة المنورة
+ * King Fahd Glorious Quran Printing Complex
+ */
+
+@font-face {
+  font-family: 'UthmanicHafs';
+  src: url('/fonts/UthmanicHafs.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار عرض المصحف</title>
+  <style>
+    @font-face {
+      font-family: 'UthmanicHafs';
+      src: url('/fonts/UthmanicHafs.woff2') format('woff2'),
+           url('/fonts/UthmanicHafs.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    
+    .page-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #8b5a2b;
+      margin-bottom: 30px;
+    }
+    
+    .quran-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 30px;
+    }
+    
+    .page-image {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+    }
+    
+    .page-nav {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+    
+    .page-button {
+      background-color: #8b5a2b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    
+    .page-button:hover {
+      background-color: #6a4423;
+    }
+    
+    .page-number {
+      display: inline-block;
+      margin: 0 10px;
+      font-size: 18px;
+      font-weight: bold;
+      min-width: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <h1>اختبار عرض صفحات المصحف</h1>
+    
+    <div class="quran-page">
+      <img id="page-image" class="page-image" src="/images/quran_pages/page_1.webp" alt="صفحة من المصحف الشريف">
+      
+      <div class="page-nav">
+        <button id="prev-page" class="page-button">السابق</button>
+        <span id="page-number" class="page-number">1</span>
+        <button id="next-page" class="page-button">التالي</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    const totalPages = 604;
+    
+    const pageImage = document.getElementById('page-image');
+    const pageNumber = document.getElementById('page-number');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    
+    // تحديث الصفحة
+    function updatePage() {
+      pageImage.src = `/images/quran_pages/page_${currentPage}.webp`;
+      pageNumber.textContent = currentPage;
+      
+      // تعطيل الأزرار عند الوصول للحدود
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= totalPages;
+    }
+    
+    // التنقل بين الصفحات
+    prevPageBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePage();
+      }
+    });
+    
+    nextPageBtn.addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        updatePage();
+      }
+    });
+    
+    // التحقق من تحميل الصورة بشكل صحيح
+    pageImage.addEventListener('error', () => {
+      pageImage.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%221000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%201000%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16b495b57c0%20text%20%7B%20fill%3A%23ff0000%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16b495b57c0%22%3E%3Crect%20width%3D%22800%22%20height%3D%221000%22%20fill%3D%22%23eeeeee%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22270%22%20y%3D%22500%22%3E%D9%81%D8%B4%D9%84%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E';
+      console.error(`فشل تحميل الصفحة ${currentPage}`);
+    });
+    
+    // تحديث الصفحة عند بدء التشغيل
+    updatePage();
+  </script>
+</body>
+</html>

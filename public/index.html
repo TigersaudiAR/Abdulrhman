@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تطبيق القرآن التعليمي</title>
+  <style>
+    @font-face {
+      font-family: 'HafsSmart';
+      src: url('/assets/fonts/HafsSmart_08.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+      direction: rtl;
+    }
+    
+    .quran-text {
+      font-family: 'HafsSmart', serif;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    h1 {
+      color: #1e3a8a;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: #333;
+    }
+    
+    .quran-sample {
+      font-family: 'HafsSmart', serif;
+      font-size: 2rem;
+      margin: 2rem 0;
+      line-height: 2;
+      color: #1e3a8a;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      margin: 2rem auto;
+    }
+    
+    .loading:after {
+      content: " ";
+      display: block;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border-radius: 50%;
+      border: 6px solid #1e3a8a;
+      border-color: #1e3a8a transparent #1e3a8a transparent;
+      animation: loading 1.2s linear infinite;
+    }
+    
+    @keyframes loading {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>تطبيق القرآن التعليمي</h1>
+    <p>جاري تحميل التطبيق...</p>
+    <div class="loading"></div>
+    <div class="quran-sample">
+      بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+    </div>
+    <p>إذا استمر التحميل لفترة طويلة، يرجى تحديث الصفحة</p>
+  </div>
+
+  <script>
+    // يمكننا استخدام هذا الملف كصفحة مؤقتة للخادم الأساسي
+    // في التطبيق الكامل، سيقوم Vite بتحميل تطبيق React
+    
+    // إظهار رسالة في حالة عدم وجود ملفات JavaScript الأساسية
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        const loadingElement = document.querySelector('.loading');
+        if (loadingElement) {
+          const errorMessage = document.createElement('p');
+          errorMessage.style.color = 'red';
+          errorMessage.textContent = 'لم يتم تحميل التطبيق بشكل صحيح. يرجى التحقق من الاتصال بالخادم.';
+          loadingElement.parentNode.insertBefore(errorMessage, loadingElement.nextSibling);
+        }
+      }, 10000); // بعد 10 ثوانٍ، نفترض أن هناك مشكلة في التحميل
+    });
+  </script>
+</body>
+</html>

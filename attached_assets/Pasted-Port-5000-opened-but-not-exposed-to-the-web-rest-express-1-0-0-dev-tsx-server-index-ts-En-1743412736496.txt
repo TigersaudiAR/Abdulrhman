@@ -1,0 +1,76 @@
+Port :5000 opened, but not exposed to the web.
+ 
+> rest-express@1.0.0 dev
+> tsx server/index.ts
+ 
+Environment: Development
+Static paths:
+- Assets path: /home/runner/workspace/public/assets
+- Fonts path: /home/runner/workspace/public/fonts
+- Images path: /home/runner/workspace/public/images
+- Test path: /home/runner/workspace/public/test.html
+- Fallback path: /home/runner/workspace/public
+Registering API routes...
+Found main.tsx at /home/runner/workspace/client/src/main.tsx
+✅ SERVER RUNNING ON PORT 5000
+🚀 Server available at http://localhost:5000
+X-Replit-Port-Ready: true
+X-Replit-Port-Ready header added to all responses
+Server is listening on port 5000 and ready for connections
+Server heartbeat at 2025-03-31T09:12:39.885Z
+Server heartbeat at 2025-03-31T09:12:44.888Z
+Server heartbeat at 2025-03-31T09:12:49.888Z
+Server heartbeat at 2025-03-31T09:12:54.891Z
+Server heartbeat at 2025-03-31T09:12:59.896Z
+Server heartbeat at 2025-03-31T09:13:04.897Z
+Server heartbeat at 2025-03-31T09:13:09.902Z
+Server heartbeat at 2025-03-31T09:13:14.905Z
+Server heartbeat at 2025-03-31T09:13:19.909Z
+Server heartbeat at 2025-03-31T09:13:24.914Z
+Server heartbeat at 2025-03-31T09:13:29.918Z
+Server heartbeat at 2025-03-31T09:13:34.919Z
+Server heartbeat at 2025-03-31T09:13:39.924Z
+Server heartbeat at 2025-03-31T09:13:44.929Z
+Server heartbeat at 2025-03-31T09:13:49.934Z
+Server heartbeat at 2025-03-31T09:13:54.940Z
+Server heartbeat at 2025-03-31T09:13:59.944Z
+Server heartbeat at 2025-03-31T09:14:04.944Z
+Server heartbeat at 2025-03-31T09:14:09.948Z
+Server heartbeat at 2025-03-31T09:14:14.953Z
+Server heartbeat at 2025-03-31T09:14:19.958Z
+Server heartbeat at 2025-03-31T09:14:24.962Z
+Server heartbeat at 2025-03-31T09:14:29.967Z
+Server heartbeat at 2025-03-31T09:14:34.967Z
+Server heartbeat at 2025-03-31T09:14:39.972Z
+Server heartbeat at 2025-03-31T09:14:44.976Z
+Server heartbeat at 2025-03-31T09:14:49.981Z
+Server heartbeat at 2025-03-31T09:14:54.986Z
+Server heartbeat at 2025-03-31T09:14:59.993Z
+Server heartbeat at 2025-03-31T09:15:04.993Z
+Server heartbeat at 2025-03-31T09:15:09.998Z
+Server heartbeat at 2025-03-31T09:15:15.003Z
+Server heartbeat at 2025-03-31T09:15:20.007Z
+Server heartbeat at 2025-03-31T09:15:25.011Z
+Server heartbeat at 2025-03-31T09:15:30.016Z
+Server heartbeat at 2025-03-31T09:15:35.016Z
+Server heartbeat at 2025-03-31T09:15:40.020Z
+Server heartbeat at 2025-03-31T09:15:45.025Z
+Server heartbeat at 2025-03-31T09:15:50.030Z
+Server heartbeat at 2025-03-31T09:15:55.036Z
+Server heartbeat at 2025-03-31T09:16:00.039Z
+Server heartbeat at 2025-03-31T09:16:05.040Z
+Server heartbeat at 2025-03-31T09:16:10.044Z
+Server heartbeat at 2025-03-31T09:16:15.048Z
+Server heartbeat at 2025-03-31T09:16:20.053Z
+Server heartbeat at 2025-03-31T09:16:25.057Z
+Server heartbeat at 2025-03-31T09:16:30.062Z
+Server heartbeat at 2025-03-31T09:16:35.061Z
+Server heartbeat at 2025-03-31T09:16:40.066Z
+Server heartbeat at 2025-03-31T09:16:45.070Z
+Server heartbeat at 2025-03-31T09:16:50.075Z
+Server heartbeat at 2025-03-31T09:16:55.079Z
+Server heartbeat at 2025-03-31T09:17:00.084Z
+Server heartbeat at 2025-03-31T09:17:05.084Z
+Server heartbeat at 2025-03-31T09:17:10.089Z
+Server heartbeat at 2025-03-31T09:17:15.091Z
+

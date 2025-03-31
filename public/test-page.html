@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>صفحة اختبار</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        padding: 10px 15px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+      }
+      .status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 4px;
+        margin-right: 10px;
+      }
+      .success {
+        background-color: #dff0d8;
+        color: #3c763d;
+      }
+      .error {
+        background-color: #f2dede;
+        color: #a94442;
+      }
+      .loading {
+        background-color: #fcf8e3;
+        color: #8a6d3b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>صفحة اختبار الاتصال بالخادم</h1>
+      <div>
+        <button id="test-api">اختبار API الرئيسية</button>
+        <button id="test-connection">اختبار الاتصال</button>
+        <button id="test-health">اختبار الصحة</button>
+        <button id="test-server">اختبار الخادم الجديد</button>
+      </div>
+      <div class="result" id="result">
+        <p>نتائج الاختبار ستظهر هنا</p>
+      </div>
+    </div>
+
+    <script>
+      // وظيفة لعرض نتائج الاختبار
+      function showResult(message, status = 'normal') {
+        const resultElement = document.getElementById('result');
+        const statusClass = status === 'success' ? 'success' : status === 'error' ? 'error' : 'loading';
+        const statusText = status === 'success' ? 'ناجح' : status === 'error' ? 'فشل' : 'جاري التحميل';
+        
+        resultElement.innerHTML = `
+          <div>
+            <span class="status ${statusClass}">${statusText}</span>
+            <span>${message}</span>
+          </div>
+          <pre id="json-result" style="margin-top: 10px; overflow-x: auto;"></pre>
+        `;
+      }
+
+      // وظيفة لعرض البيانات JSON
+      function displayJson(data) {
+        const jsonElement = document.getElementById('json-result');
+        if (jsonElement) {
+          jsonElement.textContent = JSON.stringify(data, null, 2);
+        }
+      }
+
+      // اختبار API الرئيسية
+      document.getElementById('test-api').addEventListener('click', async () => {
+        try {
+          showResult('جاري اختبار API الرئيسية...', 'loading');
+          const response = await fetch('/api');
+          const data = await response.json();
+          showResult('تم الاتصال بنجاح بـ API الرئيسية', 'success');
+          displayJson(data);
+        } catch (error) {
+          showResult(`فشل الاتصال: ${error.message}`, 'error');
+        }
+      });
+
+      // اختبار الاتصال
+      document.getElementById('test-connection').addEventListener('click', async () => {
+        try {
+          showResult('جاري اختبار الاتصال...', 'loading');
+          const response = await fetch('/api/connection-test');
+          const data = await response.json();
+          showResult('تم اختبار الاتصال بنجاح', 'success');
+          displayJson(data);
+        } catch (error) {
+          showResult(`فشل اختبار الاتصال: ${error.message}`, 'error');
+        }
+      });
+
+      // اختبار الصحة
+      document.getElementById('test-health').addEventListener('click', async () => {
+        try {
+          showResult('جاري اختبار الصحة...', 'loading');
+          const response = await fetch('/api/health');
+          const data = await response.json();
+          showResult('تم اختبار الصحة بنجاح', 'success');
+          displayJson(data);
+        } catch (error) {
+          showResult(`فشل اختبار الصحة: ${error.message}`, 'error');
+        }
+      });
+      
+      // اختبار الخادم الجديد
+      document.getElementById('test-server').addEventListener('click', async () => {
+        try {
+          showResult('جاري اختبار الخادم...', 'loading');
+          const response = await fetch('/api/server-test');
+          const data = await response.json();
+          showResult('تم اختبار الخادم بنجاح', 'success');
+          displayJson(data);
+        } catch (error) {
+          showResult(`فشل اختبار الخادم: ${error.message}`, 'error');
+        }
+      });
+    </script>
+  </body>
+</html>

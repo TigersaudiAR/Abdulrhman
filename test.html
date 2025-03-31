@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صفحة الفحص - تطبيق القرآن الكريم</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f7f7f7;
+      color: #333;
+      direction: rtl;
+      text-align: right;
+    }
+    h1 {
+      color: #05668d;
+      border-bottom: 2px solid #05668d;
+      padding-bottom: 10px;
+    }
+    .section {
+      background-color: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .success {
+      color: #28a745;
+      font-weight: bold;
+    }
+    .error {
+      color: #dc3545;
+      font-weight: bold;
+    }
+    pre {
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-radius: 3px;
+      overflow-x: auto;
+      direction: ltr;
+      text-align: left;
+    }
+    .btn {
+      background-color: #05668d;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #044e6c;
+    }
+  </style>
+</head>
+<body>
+  <h1>صفحة الفحص - تطبيق القرآن الكريم</h1>
+  
+  <div class="section">
+    <h2>فحص الاتصال بالخادم</h2>
+    <div id="api-status">جاري الفحص...</div>
+    <pre id="api-result"></pre>
+    <button id="check-api" class="btn">فحص الخادم</button>
+  </div>
+  
+  <div class="section">
+    <h2>فحص الملفات الثابتة</h2>
+    <div id="static-status">جاري الفحص...</div>
+    <button id="check-static" class="btn">فحص الملفات</button>
+  </div>
+
+  <div class="section">
+    <h2>روابط مفيدة</h2>
+    <ul>
+      <li><a href="/debug-server.html">صفحة تشخيص الخادم</a></li>
+      <li><a href="/quran-test.html">اختبار صفحات المصحف</a></li>
+      <li><a href="/api/health">اختبار صحة الـ API</a></li>
+      <li><a href="/api/debug">معلومات التصحيح</a></li>
+    </ul>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // فحص الـ API
+      document.getElementById('check-api').addEventListener('click', checkAPI);
+      
+      // فحص الملفات الثابتة
+      document.getElementById('check-static').addEventListener('click', checkStatic);
+      
+      // فحص تلقائي عند التحميل
+      checkAPI();
+      checkStatic();
+    });
+    
+    async function checkAPI() {
+      const statusElement = document.getElementById('api-status');
+      const resultElement = document.getElementById('api-result');
+      
+      statusElement.textContent = 'جاري الفحص...';
+      statusElement.className = '';
+      
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+        
+        statusElement.textContent = '✓ الخادم يعمل بشكل صحيح';
+        statusElement.className = 'success';
+        resultElement.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        statusElement.textContent = '✗ فشل الاتصال بالخادم';
+        statusElement.className = 'error';
+        resultElement.textContent = error.toString();
+      }
+    }
+    
+    async function checkStatic() {
+      const statusElement = document.getElementById('static-status');
+      
+      statusElement.textContent = 'جاري الفحص...';
+      statusElement.className = '';
+      
+      try {
+        const response = await fetch('/images/quran_pages/page_1.webp');
+        
+        if (response.ok) {
+          statusElement.textContent = '✓ الملفات الثابتة متاحة بشكل صحيح';
+          statusElement.className = 'success';
+        } else {
+          statusElement.textContent = '✗ فشل تحميل الملفات الثابتة (رمز الاستجابة: ' + response.status + ')';
+          statusElement.className = 'error';
+        }
+      } catch (error) {
+        statusElement.textContent = '✗ فشل تحميل الملفات الثابتة';
+        statusElement.className = 'error';
+      }
+    }
+  </script>
+</body>
+</html>

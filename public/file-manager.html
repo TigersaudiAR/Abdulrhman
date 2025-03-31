@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة ملفات مشروع القرآن</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1, h2 {
+      color: #2c3e50;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .status {
+      background-color: #e8f4fd;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .warning {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    .file-list {
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    .file-item:last-child {
+      border-bottom: none;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .delete-btn {
+      background-color: #e74c3c;
+    }
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>إدارة ملفات مشروع القرآن</h1>
+    
+    <div class="status">
+      <h2>حالة الخادم</h2>
+      <p id="server-status">جاري التحقق من حالة الخادم...</p>
+    </div>
+    
+    <div class="warning">
+      <strong>تنبيه:</strong> يرجى توخي الحذر عند حذف الملفات، حيث قد يؤدي ذلك إلى تعطل التطبيق.
+    </div>
+    
+    <h2>الملفات المتكررة المكتشفة</h2>
+    <div class="file-list" id="duplicate-files">
+      <div class="file-item">
+        <span>جاري تحليل الملفات المتكررة...</span>
+      </div>
+    </div>
+    
+    <h2>إجراءات التنظيف</h2>
+    <button id="cleanup-btn">تشغيل سكريبت التنظيف</button>
+    <div id="cleanup-result" class="success" style="display: none;"></div>
+    
+    <h2>المجلدات الرئيسية</h2>
+    <div class="file-list">
+      <div class="file-item">
+        <span>client/ - ملفات واجهة المستخدم</span>
+      </div>
+      <div class="file-item">
+        <span>server/ - ملفات الخادم</span>
+      </div>
+      <div class="file-item">
+        <span>public/ - الملفات الثابتة</span>
+      </div>
+      <div class="file-item">
+        <span>extracted/ - ملفات مستخرجة (بعضها قد يكون متكرراً)</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // التحقق من حالة الخادم
+    async function checkServerStatus() {
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+        
+        if (data.status === 'ok') {
+          document.getElementById('server-status').innerHTML = 
+            `الخادم يعمل بشكل صحيح. الوقت: ${data.timestamp}`;
+        } else {
+          document.getElementById('server-status').innerHTML = 
+            'الخادم متصل ولكن يواجه مشاكل.';
+        }
+      } catch (error) {
+        document.getElementById('server-status').innerHTML = 
+          'لا يمكن الاتصال بالخادم. يرجى التحقق من تشغيل الخادم.';
+      }
+    }
+    
+    // عرض الملفات المتكررة
+    function displayDuplicateFiles() {
+      fetch('/duplicate_files.txt')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('لا يمكن العثور على ملف الملفات المتكررة');
+          }
+          return response.text();
+        })
+        .then(text => {
+          const files = text.split('\n').filter(line => line.trim() !== '');
+          let html = '';
+          
+          if (files.length === 0) {
+            html = '<div class="file-item"><span>لم يتم العثور على ملفات متكررة.</span></div>';
+          } else {
+            files.forEach(file => {
+              html += `
+                <div class="file-item">
+                  <span>${file}</span>
+                </div>`;
+            });
+          }
+          
+          document.getElementById('duplicate-files').innerHTML = html;
+        })
+        .catch(error => {
+          document.getElementById('duplicate-files').innerHTML = 
+            `<div class="file-item"><span>${error.message}</span></div>`;
+        });
+    }
+    
+    // تشغيل سكريبت التنظيف
+    document.getElementById('cleanup-btn').addEventListener('click', async () => {
+      try {
+        document.getElementById('cleanup-btn').disabled = true;
+        document.getElementById('cleanup-btn').innerText = 'جاري التنظيف...';
+        
+        const response = await fetch('/api/cleanup', {
+          method: 'POST'
+        });
+        
+        const result = await response.json();
+        
+        const resultElement = document.getElementById('cleanup-result');
+        resultElement.style.display = 'block';
+        
+        if (result.success) {
+          resultElement.innerHTML = `<strong>تم التنظيف بنجاح:</strong> ${result.message}`;
+          resultElement.className = 'success';
+        } else {
+          resultElement.innerHTML = `<strong>حدث خطأ:</strong> ${result.message}`;
+          resultElement.className = 'warning';
+        }
+      } catch (error) {
+        const resultElement = document.getElementById('cleanup-result');
+        resultElement.style.display = 'block';
+        resultElement.innerHTML = `<strong>حدث خطأ:</strong> لا يمكن تنفيذ عملية التنظيف. الرجاء تشغيل سكريبت cleanup.sh يدوياً.`;
+        resultElement.className = 'warning';
+      } finally {
+        document.getElementById('cleanup-btn').disabled = false;
+        document.getElementById('cleanup-btn').innerText = 'تشغيل سكريبت التنظيف';
+      }
+    });
+    
+    // تشغيل الوظائف عند تحميل الصفحة
+    window.onload = function() {
+      checkServerStatus();
+      displayDuplicateFiles();
+    };
+  </script>
+</body>
+</html>
