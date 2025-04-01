@@ -57,3 +57,7 @@ args = "./cleanup.sh"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "./run.sh"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
