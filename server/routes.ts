@@ -442,6 +442,69 @@ export async function registerRoutes(app: Express): Promise<void> {
     }
   });
 
+  // Proxy for local Quran API FastAPI server
+  app.get(`${API_PREFIX}/quran-local/:endpoint(**)`, async (req, res) => {
+    try {
+      const endpoint = req.params.endpoint;
+      const queryParams = new URLSearchParams(req.query as Record<string, string>).toString();
+      const url = `http://localhost:8000/${endpoint}${queryParams ? `?${queryParams}` : ''}`;
+
+      console.log(`Proxying request to local Quran API: ${url}`);
+      
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        res.status(200).json(data);
+      } catch (fetchError) {
+        console.error(`Error fetching from local Quran API: ${fetchError.message}`);
+        console.log('Falling back to external API...');
+        
+        // Fallback to existing implementations if local API is not available
+        if (endpoint.startsWith('tafsir/')) {
+          // Extract tafsir ID, sura, and ayah from the endpoint
+          const parts = endpoint.split('/');
+          if (parts.length >= 3) {
+            const tafsir_id = parts[1];
+            const sura = parts[2];
+            const ayah = parts[3];
+            
+            const fallbackUrl = `https://api.alquran.cloud/v1/ayah/${sura}:${ayah}/ar.jalalayn`;
+            const fallbackResponse = await fetch(fallbackUrl);
+            const fallbackData = await fallbackResponse.json();
+            
+            if (fallbackData.code === 200 && fallbackData.data) {
+              res.status(200).json({
+                sura: parseInt(sura),
+                ayah: parseInt(ayah),
+                tafsir_id,
+                text: fallbackData.data.text
+              });
+            } else {
+              res.status(404).json({ 
+                message: "Tafsir not found",
+                sura: parseInt(sura),
+                ayah: parseInt(ayah),
+                tafsir_id,
+                text: "تفسير غير متوفر حاليًا"
+              });
+            }
+            return;
+          }
+        }
+        
+        res.status(503).json({ 
+          message: 'Local Quran API is not available',
+          error: fetchError.message
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Failed to proxy local Quran API', 
+        error: (error as Error).message 
+      });
+    }
+  });
+
   // API الإشارات المرجعية
   // الحصول على الإشارات المرجعية للمستخدم
   app.get(`${API_PREFIX}/bookmarks/:userId`, async (req, res) => {
