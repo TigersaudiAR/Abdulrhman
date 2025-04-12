@@ -307,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<void> {
       // في هذه الحالة سنستخدم بدائل التفسير من alquran.cloud
       const url = `https://api.alquran.cloud/v1/ayah/${sura}:${ayah}/ar.jalalayn`;
       const response = await fetch(url);
-      const data = await response.json();
+      const data = await response.json() as any;
 
       if (data.code === 200 && data.data) {
         res.status(200).json({
@@ -354,7 +354,7 @@ export async function registerRoutes(app: Express): Promise<void> {
 
       const url = `https://api.alquran.cloud/v1/ayah/${sura}:${ayah}/${edition}`;
       const response = await fetch(url);
-      const data = await response.json();
+      const data = await response.json() as any;
 
       if (data.code === 200 && data.data) {
         res.status(200).json({
@@ -398,7 +398,7 @@ export async function registerRoutes(app: Express): Promise<void> {
       // نقوم بتوجيه طلب الصفحة إلى واجهة برمجة التطبيقات الخارجية للحصول على الآيات
       const url = `https://api.alquran.cloud/v1/page/${pageNum}/quran-uthmani`;
       const response = await fetch(url);
-      const data = await response.json();
+      const data = await response.json() as any;
 
       if (data.code === 200 && data.data) {
         res.status(200).json(data.data);
@@ -418,7 +418,7 @@ export async function registerRoutes(app: Express): Promise<void> {
       const url = `https://api.aladhan.com/v1/${endpoint}${queryParams ? `?${queryParams}` : ''}`;
 
       const response = await fetch(url);
-      const data = await response.json();
+      const data = await response.json() as any;
 
       res.status(200).json(data);
     } catch (error) {
@@ -434,7 +434,7 @@ export async function registerRoutes(app: Express): Promise<void> {
       const url = `https://api.hadith.gading.dev/books/${endpoint}${queryParams ? `?${queryParams}` : ''}`;
 
       const response = await fetch(url);
-      const data = await response.json();
+      const data = await response.json() as any;
 
       res.status(200).json(data);
     } catch (error) {
@@ -453,9 +453,10 @@ export async function registerRoutes(app: Express): Promise<void> {
       
       try {
         const response = await fetch(url);
-        const data = await response.json();
+        const data = await response.json() as any;
         res.status(200).json(data);
-      } catch (fetchError) {
+      } catch (fetchErrorUnknown) {
+        const fetchError = fetchErrorUnknown as Error;
         console.error(`Error fetching from local Quran API: ${fetchError.message}`);
         console.log('Falling back to external API...');
         
@@ -470,7 +471,7 @@ export async function registerRoutes(app: Express): Promise<void> {
             
             const fallbackUrl = `https://api.alquran.cloud/v1/ayah/${sura}:${ayah}/ar.jalalayn`;
             const fallbackResponse = await fetch(fallbackUrl);
-            const fallbackData = await fallbackResponse.json();
+            const fallbackData = await fallbackResponse.json() as any;
             
             if (fallbackData.code === 200 && fallbackData.data) {
               res.status(200).json({
