@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import * as os from 'os';
 import { execSync } from 'child_process';
 import fetch from 'node-fetch';
+import { registerQuranApiRoutes } from './quran_api';
 
 export async function registerRoutes(app: Express): Promise<void> {
   console.log('Registering API routes...');
@@ -642,4 +643,8 @@ export async function registerRoutes(app: Express): Promise<void> {
       uptime: process.uptime()
     });
   });
+  
+  // Register the integrated TypeScript version of the Quran API routes
+  registerQuranApiRoutes(app);
+  console.log('✅ All API routes registered successfully');
 }

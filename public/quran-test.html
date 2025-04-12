@@ -1,143 +1,227 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اختبار عرض المصحف</title>
-  <style>
-    @font-face {
-      font-family: 'UthmanicHafs';
-      src: url('/fonts/UthmanicHafs.woff2') format('woff2'),
-           url('/fonts/UthmanicHafs.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
-    
-    body {
-      font-family: 'Arial', sans-serif;
-      text-align: center;
-      margin: 20px;
-      background-color: #f9f9f9;
-    }
-    
-    .page-container {
-      max-width: 800px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    
-    h1 {
-      color: #8b5a2b;
-      margin-bottom: 30px;
-    }
-    
-    .quran-page {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 30px;
-    }
-    
-    .page-image {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 20px;
-      border: 1px solid #e0e0e0;
-      border-radius: 5px;
-    }
-    
-    .page-nav {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-      gap: 10px;
-    }
-    
-    .page-button {
-      background-color: #8b5a2b;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
-    }
-    
-    .page-button:hover {
-      background-color: #6a4423;
-    }
-    
-    .page-number {
-      display: inline-block;
-      margin: 0 10px;
-      font-size: 18px;
-      font-weight: bold;
-      min-width: 50px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار واجهة برمجة التطبيقات للقرآن الكريم</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input, button {
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-height: 150px;
+            white-space: pre-wrap;
+        }
+        .loading {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .success {
+            color: #4CAF50;
+        }
+        .options div {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .options div > * {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="page-container">
-    <h1>اختبار عرض صفحات المصحف</h1>
-    
-    <div class="quran-page">
-      <img id="page-image" class="page-image" src="/images/quran_pages/page_1.webp" alt="صفحة من المصحف الشريف">
-      
-      <div class="page-nav">
-        <button id="prev-page" class="page-button">السابق</button>
-        <span id="page-number" class="page-number">1</span>
-        <button id="next-page" class="page-button">التالي</button>
-      </div>
-    </div>
-  </div>
+    <h1>اختبار واجهة برمجة التطبيقات للقرآن الكريم</h1>
 
-  <script>
-    let currentPage = 1;
-    const totalPages = 604;
-    
-    const pageImage = document.getElementById('page-image');
-    const pageNumber = document.getElementById('page-number');
-    const prevPageBtn = document.getElementById('prev-page');
-    const nextPageBtn = document.getElementById('next-page');
-    
-    // تحديث الصفحة
-    function updatePage() {
-      pageImage.src = `/images/quran_pages/page_${currentPage}.webp`;
-      pageNumber.textContent = currentPage;
-      
-      // تعطيل الأزرار عند الوصول للحدود
-      prevPageBtn.disabled = currentPage <= 1;
-      nextPageBtn.disabled = currentPage >= totalPages;
-    }
-    
-    // التنقل بين الصفحات
-    prevPageBtn.addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        updatePage();
-      }
-    });
-    
-    nextPageBtn.addEventListener('click', () => {
-      if (currentPage < totalPages) {
-        currentPage++;
-        updatePage();
-      }
-    });
-    
-    // التحقق من تحميل الصورة بشكل صحيح
-    pageImage.addEventListener('error', () => {
-      pageImage.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%221000%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%201000%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16b495b57c0%20text%20%7B%20fill%3A%23ff0000%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16b495b57c0%22%3E%3Crect%20width%3D%22800%22%20height%3D%221000%22%20fill%3D%22%23eeeeee%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22270%22%20y%3D%22500%22%3E%D9%81%D8%B4%D9%84%20%D8%AA%D8%AD%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E';
-      console.error(`فشل تحميل الصفحة ${currentPage}`);
-    });
-    
-    // تحديث الصفحة عند بدء التشغيل
-    updatePage();
-  </script>
+    <div class="input-group">
+        <label for="api-type">نوع الاستعلام:</label>
+        <select id="api-type">
+            <option value="available">الموارد المتاحة</option>
+            <option value="tafsir">التفسير</option>
+            <option value="translation">الترجمة</option>
+        </select>
+    </div>
+
+    <div id="options-container" class="options">
+        <!-- تفاصيل الاستعلام ستضاف هنا بالجافاسكريبت -->
+    </div>
+
+    <button id="send-request">إرسال الطلب</button>
+
+    <div>
+        <h3>النتيجة:</h3>
+        <div id="result">النتائج ستظهر هنا...</div>
+    </div>
+
+    <script>
+        // عناصر HTML
+        const apiTypeSelect = document.getElementById('api-type');
+        const optionsContainer = document.getElementById('options-container');
+        const sendRequestButton = document.getElementById('send-request');
+        const resultDiv = document.getElementById('result');
+
+        // قائمة التفاسير والترجمات المتاحة
+        let availableTafsirs = [];
+        let availableTranslations = [];
+
+        // الحصول على قائمة الموارد المتاحة عند تحميل الصفحة
+        window.addEventListener('load', async () => {
+            try {
+                resultDiv.textContent = 'جارِ تحميل الموارد المتاحة...';
+                resultDiv.className = 'loading';
+                
+                const response = await fetch('/api/quran-api/available');
+                const data = await response.json();
+                
+                availableTafsirs = data.tafsirs || [];
+                availableTranslations = data.translations || [];
+                
+                resultDiv.textContent = `تم تحميل ${availableTafsirs.length} تفسير و ${availableTranslations.length} ترجمة.`;
+                resultDiv.className = 'success';
+                
+                // تحديث واجهة المستخدم
+                updateOptionsUI();
+            } catch (error) {
+                resultDiv.textContent = `خطأ في تحميل الموارد: ${error.message}`;
+                resultDiv.className = 'error';
+            }
+        });
+
+        // تحديث واجهة المستخدم عند تغيير نوع الاستعلام
+        apiTypeSelect.addEventListener('change', updateOptionsUI);
+
+        // تحديث خيارات الاستعلام بناءً على النوع المحدد
+        function updateOptionsUI() {
+            const apiType = apiTypeSelect.value;
+            optionsContainer.innerHTML = '';
+
+            if (apiType === 'tafsir') {
+                // خيارات التفسير
+                addSelectElement('tafsir-id', 'التفسير:', availableTafsirs);
+                addNumberInput('sura', 'السورة:', 1, 114, 1);
+                addNumberInput('ayah', 'الآية:', 1, 286, 1);
+            } else if (apiType === 'translation') {
+                // خيارات الترجمة
+                addSelectElement('translation-id', 'الترجمة:', availableTranslations);
+                addNumberInput('sura', 'السورة:', 1, 114, 1);
+                addNumberInput('ayah', 'الآية:', 1, 286, 1);
+            }
+        }
+
+        // إضافة عنصر اختيار للواجهة
+        function addSelectElement(id, label, options) {
+            const div = document.createElement('div');
+            
+            const labelElement = document.createElement('label');
+            labelElement.setAttribute('for', id);
+            labelElement.textContent = label;
+            
+            const select = document.createElement('select');
+            select.id = id;
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                select.appendChild(optionElement);
+            });
+            
+            div.appendChild(labelElement);
+            div.appendChild(select);
+            optionsContainer.appendChild(div);
+        }
+
+        // إضافة حقل إدخال رقمي للواجهة
+        function addNumberInput(id, label, min, max, defaultValue) {
+            const div = document.createElement('div');
+            
+            const labelElement = document.createElement('label');
+            labelElement.setAttribute('for', id);
+            labelElement.textContent = label;
+            
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.id = id;
+            input.min = min;
+            input.max = max;
+            input.value = defaultValue;
+            
+            div.appendChild(labelElement);
+            div.appendChild(input);
+            optionsContainer.appendChild(div);
+        }
+
+        // معالجة إرسال الطلب
+        sendRequestButton.addEventListener('click', async () => {
+            try {
+                resultDiv.textContent = 'جارِ جلب البيانات...';
+                resultDiv.className = 'loading';
+                
+                const apiType = apiTypeSelect.value;
+                let url = '';
+                
+                if (apiType === 'available') {
+                    url = '/api/quran-api/available';
+                } else if (apiType === 'tafsir') {
+                    const tafsirId = document.getElementById('tafsir-id').value;
+                    const sura = document.getElementById('sura').value;
+                    const ayah = document.getElementById('ayah').value;
+                    url = `/api/quran-api/tafsir/${tafsirId}/${sura}/${ayah}`;
+                } else if (apiType === 'translation') {
+                    const translationId = document.getElementById('translation-id').value;
+                    const sura = document.getElementById('sura').value;
+                    const ayah = document.getElementById('ayah').value;
+                    url = `/api/quran-api/translation/${translationId}/${sura}/${ayah}`;
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'success';
+            } catch (error) {
+                resultDiv.textContent = `خطأ: ${error.message}`;
+                resultDiv.className = 'error';
+            }
+        });
+    </script>
 </body>
 </html>
